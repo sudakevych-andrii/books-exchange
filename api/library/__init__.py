@@ -6,4 +6,4 @@ from .resource import Library
 library = Blueprint("library", __name__)
 api_library = Api(library)
 
-api_library.add_resource(Library, "/users/<value>/library")
+api_library.add_resource(Library, "/users/<value>/library", "/users/<value>/library/<book_id>")

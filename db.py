@@ -3,7 +3,10 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 import jwt
 from datetime import datetime, timedelta
+from flask_migrate import Migrate
+
 db = SQLAlchemy()
+migrate = Migrate()
 
 
 class UsersModel(db.Model):
@@ -13,7 +16,8 @@ class UsersModel(db.Model):
     name = db.Column(db.String(255), nullable=False)
     email = db.Column(db.String(255), nullable=False)
     password = db.Column(db.String(255), nullable=False)
-    library = db.relationship("BookModel", backref="users")
+    library = db.relationship("BookModel", backref="library", foreign_keys="BookModel.user_id")
+    wishlist = db.relationship("BookModel", secondary="wishlist", backref=db.backref("wishlist"))
 
     def __init__(self, name, email, password):
         self.name = name
@@ -60,7 +64,16 @@ class BookModel(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     author = db.Column(db.String(255), nullable=False)
     title = db.Column(db.String(255), nullable=False)
-    edition = db.Column(db.String(255), nullable=False)
+    publisher = db.Column(db.String(255), nullable=False)
     year_edition = db.Column(db.Integer, nullable=False)
     translator = db.Column(db.String(255))
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    visibility = db.Column(db.SMALLINT, server_default="1")
+    exchange = db.Column(db.SMALLINT, server_default="1")
+
+
+wishlist = db.Table(
+    'wishlist',
+    db.Column("user_id", db.Integer, db.ForeignKey("users.id")),
+    db.Column("book_id", db.Integer, db.ForeignKey("books.id"))
+)

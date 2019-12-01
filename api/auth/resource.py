@@ -30,7 +30,7 @@ class Login(MethodView):
             data = json.loads(request.data)
             user = UsersModel.query.filter_by(email=data["email"]).first()
             if user and user.password_is_valid(data["password"]):
-                access_token = user.generate_token(user.user_id)
+                access_token = user.generate_token(user.id)
                 if access_token:
                     response = {
                         "message": "You logged in successfully.",

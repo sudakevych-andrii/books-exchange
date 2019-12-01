@@ -1,11 +1,12 @@
 from flask import Flask
 
 from config import run_config
-from db import db
+from db import db, migrate
 from api.auth import auth
 from api.users import users
 from api.books import books
 from api.library import library
+from api.wishlist import wishlist
 
 
 def create_app():
@@ -13,11 +14,13 @@ def create_app():
     app.config.from_object(run_config())
 
     db.init_app(app)
+    migrate.init_app(app, db)
 
     app.register_blueprint(auth)
     app.register_blueprint(users)
     app.register_blueprint(books)
     app.register_blueprint(library)
+    app.register_blueprint(wishlist)
 
     db.create_all(app=app)
 

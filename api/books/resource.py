@@ -4,6 +4,8 @@ from flask import request
 from flask_restful import Resource, marshal_with
 
 from db import BookModel, db
+from .utils import filter_books_by_args
+from .parser import books_parser
 from .structure import book_structure
 
 
@@ -11,9 +13,10 @@ class Books(Resource):
 
     @marshal_with(book_structure)
     def get(self, value=None):
+        args = books_parser.parse_args()
         if value:
             return BookModel.query.get(value)
-        return BookModel.query.all()
+        return filter_books_by_args(args, BookModel)
 
     def post(self):
         data = json.loads(request.data)

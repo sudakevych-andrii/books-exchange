@@ -1,5 +1,4 @@
 from flask import Blueprint
-
 from .resource import Registration, Login
 
 auth = Blueprint("auth", __name__)
