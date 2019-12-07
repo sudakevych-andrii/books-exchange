@@ -1,6 +1,6 @@
 import json
 
-from flask import request, jsonify
+from flask import make_response, request, jsonify
 from flask.views import MethodView
 
 from db import UsersModel
@@ -16,7 +16,6 @@ class Registration(MethodView):
                 user = UsersModel(**data)
                 user.save()
                 return "You registered successfully. Please log in."
-
             else:
                 return 'User already exists. Please login.'
         except Exception as e:
@@ -36,7 +35,7 @@ class Login(MethodView):
                         "message": "You logged in successfully.",
                         "access_token": access_token.decode()
                     }
-                    return jsonify(response)
+                    return make_response(jsonify(response))
                 else:
                     return "Invalid email or password, Please try again"
         except Exception as e:

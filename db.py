@@ -16,6 +16,7 @@ class UsersModel(db.Model):
     name = db.Column(db.String(255), nullable=False)
     email = db.Column(db.String(255), nullable=False)
     password = db.Column(db.String(255), nullable=False)
+    role = db.Column(db.String(255), server_default="user")
     library = db.relationship("BookModel", backref="library", foreign_keys="BookModel.user_id")
     wishlist = db.relationship("BookModel", secondary="wishlist", backref=db.backref("wishlist"))
 
@@ -34,13 +35,13 @@ class UsersModel(db.Model):
     def generate_token(self, user_id):
         try:
             payload = {
-                'exp': datetime.utcnow() + timedelta(minutes=5),
-                'iat': datetime.utcnow(),
-                'sub': user_id
+                "exp": datetime.utcnow() + timedelta(minutes=5),
+                "iat": datetime.utcnow(),
+                "sub": user_id
             }
             jwt_string = jwt.encode(
                 payload,
-                current_app.config.get('SECRET_KEY'),
+                current_app.config.get("SECRET_KEY"),
                 algorithm='HS256'
             )
             return jwt_string
@@ -50,7 +51,7 @@ class UsersModel(db.Model):
     @staticmethod
     def decode_token(token):
         try:
-            payload = jwt.decode(token, current_app.config.get("SECRET"))
+            payload = jwt.decode(token, current_app.config.get("SECRET_KEY"), algorithms=['HS256'])
             return payload["sub"]
         except jwt.ExpiredSignatureError:
             return "Expired token. Please login to get a new token"

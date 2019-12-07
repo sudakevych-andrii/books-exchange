@@ -1,7 +1,8 @@
-def filter_books_by_args(args_obj, data):
-    if any(args_obj.values()):
-        for key, value in args_obj.items():
-            if value:
-                return data.query.filter(getattr(data, key) == value).all()
-    else:
-        return data.query.all()
+from flask import request
+
+
+def get_authorized_user(model):
+    auth_header = request.headers.get("Authorization")
+    access_token = auth_header.split(" ")[1]
+    if access_token:
+        return model.decode_token(access_token)

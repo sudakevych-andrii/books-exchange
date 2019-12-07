@@ -25,16 +25,17 @@ class Books(Resource):
         db.session.commit()
         return "Successfully added a new book"
 
-    def put(self, value):
+    def put(self):
         data = json.loads(request.data)
-        book = BookModel.query.get(value)
+        book = BookModel.query.get(data.get("id"))
         for key, value in data.items():
             setattr(book, key, value)
         db.session.commit()
         return "Successfully updated a book"
 
-    def delete(self, value):
-        book = BookModel.query.get(value)
+    def delete(self):
+        data = json.loads(request.data)
+        book = BookModel.query.get(data.get("id"))
         db.session.delete(book)
         db.session.commit()
         return "Successfully deleted a book"
