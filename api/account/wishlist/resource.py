@@ -12,8 +12,8 @@ class Wishlist(Resource):
 
     @marshal_with(book_structure)
     def get(self):
-        user_id = get_authorized_user(UsersModel)
-        return UsersModel.query.get(user_id).wishlist
+        user = get_authorized_user(UsersModel)
+        return user.wishlist
 
     # Need to move to books resource
     def post(self, value):

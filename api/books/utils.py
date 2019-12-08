@@ -4,11 +4,21 @@ def filter_books_by_args(args_obj, data):
             if value:
                 return data.query.filter(getattr(data, key) == value).all()
     else:
-        return data.query.filter(data.visibility == 1).order_by(data.id).all()
+        return data.query.all()
+
+
+def show_books(args_obj, data, user):
+    data = filter_books_by_args(args_obj, data)
+    if user.role == "admin":
+        return data
+    else:
+        return [book for book in data if book.visibility]
 
 
 def add_book_to_library(user, book):
     user.library.append(book)
+    if book in user.wishlist:
+        user.wishlist.remove(book)
 
 
 def add_book_to_wishlist(user, book):

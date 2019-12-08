@@ -12,8 +12,8 @@ class Library(Resource):
 
     @marshal_with(book_structure)
     def get(self):
-        user_id = get_authorized_user(UsersModel)
-        return UsersModel.query.get(user_id).library
+        user = get_authorized_user(UsersModel)
+        return user.library
 
     # Need to move to books resource
     def post(self, value):
@@ -24,7 +24,7 @@ class Library(Resource):
         db.session.commit()
         return "Successfully added a book to library"
 
-    def put(self, value):
+    def put(self):
         data = json.loads(request.data)
         book = BookModel.query.get(data.get("id"))
         for key, value in data.items():
