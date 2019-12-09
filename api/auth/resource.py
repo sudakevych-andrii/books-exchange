@@ -18,8 +18,8 @@ class Registration(MethodView):
                 return "You registered successfully. Please log in."
             else:
                 return 'User already exists. Please login.'
-        except Exception as e:
-            return str(e)
+        except Exception as error:
+            return str(error)
 
 
 class Login(MethodView):
@@ -38,5 +38,5 @@ class Login(MethodView):
                     return make_response(jsonify(response))
                 else:
                     return "Invalid email or password, Please try again"
-        except Exception as e:
-            return str(e)
+        except Exception as error:
+            return str(error)

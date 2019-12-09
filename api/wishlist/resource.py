@@ -8,4 +8,7 @@ class Wishlist(Resource):
 
     @marshal_with(book_structure)
     def get(self, value):
-        return UsersModel.query.get(value).wishlist
+        try:
+            return UsersModel.query.get(value).wishlist
+        except (ValueError, KeyError, TypeError) as error:
+            return f"Something went wrong when got library with following error - {error}"

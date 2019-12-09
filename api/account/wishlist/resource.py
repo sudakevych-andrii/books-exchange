@@ -12,22 +12,19 @@ class Wishlist(Resource):
 
     @marshal_with(book_structure)
     def get(self):
-        user = get_authorized_user(UsersModel)
-        return user.wishlist
-
-    # Need to move to books resource
-    def post(self, value):
-        data = json.loads(request.data)
-        user = UsersModel.query.get(value)
-        book = BookModel.query.get(data.get("id"))
-        user.wishlist.append(book)
-        db.session.commit()
-        return "Successfully added a book to wishlist"
+        try:
+            user = get_authorized_user(UsersModel)
+            return user.wishlist
+        except (ValueError, KeyError, TypeError) as error:
+            return f"Something went wrong when got account wishlist with following error - {error}"
 
     def delete(self):
-        data = json.loads(request.data)
-        user = get_authorized_user(UsersModel)
-        book = BookModel.query.get(data.get("id"))
-        user.wishlist.remove(book)
-        db.session.commit()
-        return "Successfully deleted a book from wishlist"
+        try:
+            data = json.loads(request.data)
+            user = get_authorized_user(UsersModel)
+            book = BookModel.query.get(data.get("id"))
+            user.wishlist.remove(book)
+            db.session.commit()
+            return f"Successfully deleted a book {book.name} from wishlist"
+        except (ValueError, KeyError, TypeError) as error:
+            return f"Something went wrong when deleted book from account wishlist with following error - {error}"

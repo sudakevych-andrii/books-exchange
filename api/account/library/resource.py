@@ -12,32 +12,32 @@ class Library(Resource):
 
     @marshal_with(book_structure)
     def get(self):
-        user = get_authorized_user(UsersModel)
-        return user.library
-
-    # Need to move to books resource
-    def post(self, value):
-        data = json.loads(request.data)
-        user = UsersModel.query.get(value)
-        book = BookModel.query.get(data.get("id"))
-        user.library.append(book)
-        db.session.commit()
-        return "Successfully added a book to library"
+        try:
+            user = get_authorized_user(UsersModel)
+            return user.library
+        except (ValueError, KeyError, TypeError) as error:
+            return f"Something went wrong when got account library with following error - {error}"
 
     def put(self):
-        data = json.loads(request.data)
-        book = BookModel.query.get(data.get("id"))
-        for key, value in data.items():
-            setattr(book, key, value)
-            if not data.get("visibility"):
-                book.exchange = 0
-        db.session.commit()
-        return "Successfully updated a book in library"
+        try:
+            data = json.loads(request.data)
+            book = BookModel.query.get(data.get("id"))
+            for key, value in data.items():
+                setattr(book, key, value)
+                if not data.get("visibility"):
+                    book.exchange = 0
+            db.session.commit()
+            return book
+        except (ValueError, KeyError, TypeError) as error:
+            return f"Something went wrong when updated book in account library with following error - {error}"
 
     def delete(self, value):
-        data = json.loads(request.data)
-        user = UsersModel.query.get(value)
-        book = BookModel.query.get(data.get("id"))
-        user.library.remove(book)
-        db.session.commit()
-        return "Successfully deleted a book from library"
+        try:
+            data = json.loads(request.data)
+            user = UsersModel.query.get(value)
+            book = BookModel.query.get(data.get("id"))
+            user.library.remove(book)
+            db.session.commit()
+            return f"Successfully deleted a book {book.name} from library"
+        except (ValueError, KeyError, TypeError) as error:
+            return f"Something went wrong when deleted book from account library with following error - {error}"
