@@ -13,12 +13,12 @@ from .structure import book_structure
 class Books(Resource):
 
     @marshal_with(book_structure)
-    def get(self, value=None):
+    def get(self, book_id=None):
         try:
             user = get_authorized_user(UsersModel)
             args = books_parser.parse_args()
-            if value:
-                return BookModel.query.get(value)
+            if book_id:
+                return BookModel.query.get(book_id)
             else:
                 return show_books(args, BookModel, user)
         except (ValueError, KeyError, TypeError) as error:

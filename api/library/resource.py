@@ -8,11 +8,11 @@ from .structure import book_structure
 class Library(Resource):
 
     @marshal_with(book_structure)
-    def get(self, value):
+    def get(self, user_id):
         try:
             user = get_authorized_user(UsersModel)
-            books = UsersModel.query.get(value).library
-            if user and (user.id == value or user.role == "admin"):
+            books = UsersModel.query.get(user_id).library
+            if user and (user.id == user_id or user.role == "admin"):
                 return books
             else:
                 return [book for book in books if book.visibility]

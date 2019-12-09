@@ -6,4 +6,4 @@ from .resource import Books
 books = Blueprint("books", __name__)
 api_books = Api(books)
 
-api_books.add_resource(Books, "/books", "/books/<value>")
+api_books.add_resource(Books, "/books", "/books/<book_id>")

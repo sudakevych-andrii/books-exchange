@@ -7,10 +7,10 @@ from db import UsersModel
 class Users(Resource):
 
     @marshal_with(users_structure)
-    def get(self, value=None):
+    def get(self, user_id=None):
         try:
-            if value:
-                return UsersModel.query.get(value)
+            if user_id:
+                return UsersModel.query.get(user_id)
             return UsersModel.query.all()
         except (ValueError, KeyError, TypeError) as error:
             return f"Something went wrong when got users list with following error - {error}"
