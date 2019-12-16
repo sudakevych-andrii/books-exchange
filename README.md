@@ -12,7 +12,7 @@ POST
 /auth/login  
 Login
 
-## Users
+## UsersList
 
 GET
 

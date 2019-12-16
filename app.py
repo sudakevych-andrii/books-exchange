@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_cors import CORS
 
 from config import run_config
 from db import db, migrate
@@ -13,6 +14,7 @@ from api.wishlist import wishlist
 
 def create_app():
     app = Flask(__name__)
+    CORS(app)
     app.config.from_object(run_config())
 
     db.init_app(app)
