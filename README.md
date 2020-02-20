@@ -1,4 +1,4 @@
-# Books exchange
+# Books exchange. Flask project.
 
 ## Authorization
 
